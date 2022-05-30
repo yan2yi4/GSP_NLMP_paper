@@ -2,7 +2,7 @@ function [ mean_MSD_vector, mean_x_vec_matrix, ...
            mean_elapsedTime_vector,mean_MSD_t ] = ...
             Ext_run_loop_NLMP_mult( x_ref , ...
             D_s, U_f, stable_dist_para, alg_factor, max_it, ...
-            ensemble, p,static,sigma,U,th)
+            runs_total, p,static,sigma,U,th)
 [classes, steps,dims] = size(x_ref); 
 F = size(U_f, 2);
 alpha = stable_dist_para(1);
@@ -11,11 +11,11 @@ sigma_diag = diag(sigma);
 num_sampled = sum(sum(D_s));
 MSD_vector_matrix = []; 
 NMSD_vector_matrix = [];
-MSD_t_ensemble_matrix = []; 
+MSD_t_runs_total_matrix = []; 
 elapsedTime_vector_matrix = [];
 
 x_vec_tensor = [];
-for j = 1:ensemble
+for j = 1:runs_total
     stable_dist = makedist('Stable','alpha',alpha,'beta',0,'gam',gam,'delta',0);
     MSD_t = []; MSD_vector = []; elapsedTime_vector = [];
     x_vec = zeros(classes,dims);
@@ -46,7 +46,7 @@ for j = 1:ensemble
                                elapsedTime ];
     ed
     if static ==0  %time-varying
-        MSD_t_ensemble_matrix = [MSD_t_ensemble_matrix;MSD_t];
+        MSD_t_runs_total_matrix = [MSD_t_runs_total_matrix;MSD_t];
     end
     MSD_vector_matrix = [MSD_vector_matrix MSD_vector];
     x_vec_tensor(:,:,:,j) = x_vec_matrix;
@@ -61,7 +61,7 @@ mean_x_vec_matrix = permute(mean_x_vec_matrix,[1 3 2]);
 
 for counter = 1:max_it
     if static ==0
-        mean_MSD_t(counter) = mean( MSD_t_ensemble_matrix(:,counter) );
+        mean_MSD_t(counter) = mean( MSD_t_runs_total_matrix(:,counter) );
     end
     mean_MSD_vector(counter) = mean( MSD_vector_matrix(counter,:) )';
     mean_elapsedTime_vector(counter) = mean( elapsedTime_vector_matrix(counter,:) )';
