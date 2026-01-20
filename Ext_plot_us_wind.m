@@ -17,7 +17,7 @@ earthRadius = 6360;
 [numbDataTable, textDataTable, rawDataTable] = ...
     xlsread("extracted",2);
 numberStations = size(numbDataTable,1);
-load('Real_graph_and_sampling.mat')
+load('Ext_Real_graph_and_sampling.mat')
 latitudeVector = numbDataTable(:,1); 
 longitudeVector = numbDataTable(:,2); 
 
